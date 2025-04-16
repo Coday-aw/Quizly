@@ -22,20 +22,19 @@ const QuizCard = ({ quiz, onDelete }: QuizCardProps) => {
     setOpen(!open);
   };
 
-  // useEffect(() => {
-  //   const handleClickOutside = (e: MouseEvent) => {
-  //     if (
-  //       dropdownRef.current &&
-  //       !dropdownRef.current.contains(e.target as Node)
-  //     ) {
-  //       setOpen(!open);
-  //     }
-  //   };
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target as Node)
+    ) {
+      setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <>
@@ -62,7 +61,7 @@ const QuizCard = ({ quiz, onDelete }: QuizCardProps) => {
               <HiOutlineDotsHorizontal onClick={toggleMode} size={30} />
               {open && (
                 <div
-                  // ref={dropdownRef}
+                  ref={dropdownRef}
                   className=" absolute left-0 bottom-[-95px] p-2 w-28 h-24 bg-white text-black rounded-lg border border-slate-300 dark:border-none "
                 >
                   <Link

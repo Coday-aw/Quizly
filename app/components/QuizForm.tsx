@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import Button from "./Button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Quiz } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -10,24 +10,39 @@ import Modal from "./Modal";
 import QuizIcon from "./QuizIcon";
 import { QuizIcons } from "@/lib/data";
 import toast, { Toaster } from "react-hot-toast";
+import { RxCrossCircled } from "react-icons/rx";
 
-const QuizForm = () => {
+interface QuizFormProps {
+  quiz?: Quiz;
+  isEditing: boolean;
+}
+
+const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [icon, setIcon] = useState("");
-  const [quiz, setQuiz] = useState<Quiz>({
-    _id: "",
-    title: "",
-    icon: "",
-    questions: [
-      {
-        id: uuidv4(),
-        question: "",
-        options: ["", "", "", ""],
-        correctAnswer: "",
-      },
-    ],
-  });
+  const [icon, setIcon] = useState(initialQuiz?.icon || "");
+  const [quiz, setQuiz] = useState<Quiz>(
+    initialQuiz || {
+      _id: "",
+      title: "",
+      icon: "",
+      questions: [
+        {
+          id: uuidv4(),
+          question: "",
+          options: ["", "", "", ""],
+          correctAnswer: "",
+        },
+      ],
+    }
+  );
+
+  useEffect(() => {
+    if (initialQuiz) {
+      setQuiz(initialQuiz);
+      setIcon(initialQuiz.icon);
+    }
+  }, [initialQuiz]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -47,6 +62,13 @@ const QuizForm = () => {
     }));
   };
 
+  const removeQuestion = (index: number) => {
+    setQuiz((prevQuiz) => ({
+      ...prevQuiz,
+      questions: prevQuiz.questions.filter((_, i) => i !== index),
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -60,29 +82,37 @@ const QuizForm = () => {
     }
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/quizzes`,
-        {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(quiz),
-        }
-      );
+      const url = isEditing
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/quizzes?id=${quiz._id}`
+        : `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/quizzes`;
+      const method = isEditing ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(quiz),
+      });
 
       const data = await res.json();
       console.log(res, data);
 
-      if (res.status === 201) {
-        toast.success("Quiz created successfully");
+      if (res.ok) {
+        toast.success(
+          isEditing ? "Quiz updated successfully" : "Quiz created successfully"
+        );
         router.push("/dashboard");
       } else {
         toast.error("Something went wrong");
       }
     } catch (error) {
       console.log(error);
-      toast.error("An error occurred while creating the quiz");
+      toast.error(
+        isEditing
+          ? "An error occurred while updating Quiz"
+          : "An error occurred while creating the quiz"
+      );
     }
   };
   const setQuestions = (
@@ -97,7 +127,9 @@ const QuizForm = () => {
   return (
     <div className=" dark:bg-slate-800 dark:border-none rounded-lg border border-purple-300 lg:p-10 p-2 mt-10 flex flex-col gap-10">
       <Toaster />
-      <p className="text-center font-bold text-2xl">Create your quiz</p>
+      <p className="text-center font-bold text-2xl">
+        {isEditing ? "Edit your quiz" : "Create your quiz"}
+      </p>
       <div className="flex  justify-between border rounded-lg p-2 border-purple-300 ">
         <div className="flex items-center">
           <label htmlFor="quiz name" className="font-bold">
@@ -155,6 +187,13 @@ const QuizForm = () => {
           key={q.id}
           className="flex flex-col gap-10  md:p-6 p-4 rounded-lg border border-purple-200"
         >
+          <p
+            onClick={() => removeQuestion(index)}
+            className="flex justify-end cursor-pointer"
+          >
+            <RxCrossCircled color="red" size={20} />
+          </p>
+
           <div className="flex flex-col md:flex-row gap-2 md:gap-10">
             <label htmlFor="question" className="font-bold flex gap-1">
               Question <span>{index + 1} </span>
@@ -241,7 +280,9 @@ const QuizForm = () => {
               >
                 Add a new Question
               </button>
-              <Button type="submit">Create Quiz</Button>
+              <Button type="submit">
+                {isEditing ? "Updated Quiz" : "Create Quiz"}
+              </Button>
             </div>
           )}
         </form>

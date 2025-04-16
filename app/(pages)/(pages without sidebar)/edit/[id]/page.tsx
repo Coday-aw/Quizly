@@ -1,7 +1,10 @@
 "use client";
 
+import QuizForm from "@/app/components/QuizForm";
 import { useQuiz } from "@/app/hooks/useQuizzes";
+import { Input } from "@/components/ui/input";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 function EditPage() {
@@ -13,7 +16,7 @@ function EditPage() {
   return (
     <>
       <Toaster />
-      <div>EditPage</div>
+      <QuizForm quiz={quiz || undefined} isEditing={true} />
     </>
   );
 }

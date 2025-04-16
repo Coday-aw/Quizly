@@ -98,3 +98,47 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
+
+export async function PUT(req: NextRequest) {
+  await connectDB();
+
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { message: "Quiz id is requried" },
+        { status: 400 }
+      );
+    }
+
+    const updatedData = await req.json();
+
+    if (!updatedData.title || !updatedData.icon || !updatedData.questions) {
+      return NextResponse.json(
+        { message: "Please fill all feilds" },
+        { status: 400 }
+      );
+    }
+
+    const updatedQuiz = await Quiz.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedQuiz) {
+      return NextResponse.json({ message: "Quiz not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { message: "quiz update successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "error updating quiz" },
+      { status: 500 }
+    );
+  }
+}
