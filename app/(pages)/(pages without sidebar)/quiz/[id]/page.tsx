@@ -131,7 +131,7 @@ function QuizPage() {
                     setSelectedAnwser(option);
                   }}
                   key={index}
-                  className={` text-2xl w-full lg:w-[600px] p-3 text-white rounded-lg cursor-pointer
+                  className={` text-2xl w-full lg:w-[600px] p-3 dark:text-white text-black rounded-lg cursor-pointer
                      ${
                        option === selectedAnwser
                          ? "bg-purple-500"

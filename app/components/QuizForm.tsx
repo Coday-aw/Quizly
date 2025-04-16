@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { FaGlobe } from "react-icons/fa";
 import Modal from "./Modal";
-import QuizIcon from "./QuizIcon";
 import { QuizIcons } from "@/lib/data";
 import toast, { Toaster } from "react-hot-toast";
 import { RxCrossCircled } from "react-icons/rx";
@@ -39,10 +38,20 @@ const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
 
   useEffect(() => {
     if (initialQuiz) {
-      setQuiz(initialQuiz);
+      setQuiz({
+        ...initialQuiz,
+        questions: initialQuiz.questions.map((question) => ({
+          ...question,
+          id: question.id || uuidv4(),
+        })),
+      });
       setIcon(initialQuiz.icon);
     }
   }, [initialQuiz]);
+
+  useEffect(() => {
+    console.log("questions", quiz.questions);
+  }, [quiz.questions]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -63,10 +72,15 @@ const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
   };
 
   const removeQuestion = (index: number) => {
-    setQuiz((prevQuiz) => ({
-      ...prevQuiz,
-      questions: prevQuiz.questions.filter((_, i) => i !== index),
-    }));
+    if (quiz.questions.length === 1) {
+      toast.error("you must have at least one question");
+      return;
+    } else {
+      setQuiz((prevQuiz) => ({
+        ...prevQuiz,
+        questions: prevQuiz.questions.filter((_, i) => i !== index),
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -184,7 +198,7 @@ const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
       {quiz.questions.map((q, index) => (
         <form
           onSubmit={handleSubmit}
-          key={q.id}
+          key={index}
           className="flex flex-col gap-10  md:p-6 p-4 rounded-lg border border-purple-200"
         >
           <p
@@ -281,7 +295,7 @@ const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
                 Add a new Question
               </button>
               <Button type="submit">
-                {isEditing ? "Updated Quiz" : "Create Quiz"}
+                {isEditing ? "Save" : "Create Quiz"}
               </Button>
             </div>
           )}

@@ -1,5 +1,4 @@
 import { AiFillAppstore } from "react-icons/ai";
-import { IoIosHeart } from "react-icons/io";
 import Link from "next/link";
 import { IoMdCreate } from "react-icons/io";
 import { useActiveLink } from "@/app/components/context/ActiveLinkContext";
@@ -35,19 +34,6 @@ const Links = () => {
         </span>
         <Link href="/dashboard">
           <AiFillAppstore size={25} />
-        </Link>
-      </div>
-      <div
-        onClick={() => setActiveLink("/favorits")}
-        className={`relative group hover:bg-purple-500 p-2 hover:text-red-500  rounded-lg cursor-pointer ${
-          activeLink === "/favorits" ? "bg-purple-500 text-red-500" : ""
-        } `}
-      >
-        <span className=" absolute top-[-34px] text-center right-[-8px] text-white bg-black p-1 text-sm rounded-full opacity-0 group-hover:opacity-100 ">
-          Favorits
-        </span>
-        <Link href="/favorits">
-          <IoIosHeart size={25} />
         </Link>
       </div>
     </div>

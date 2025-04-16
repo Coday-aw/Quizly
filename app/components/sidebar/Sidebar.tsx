@@ -1,6 +1,5 @@
 "use client";
 import { ActiveLinkProvider } from "../context/ActiveLinkContext";
-import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { MdQuiz } from "react-icons/md";
 import Links from "./Links";
@@ -16,7 +15,7 @@ const Sidebar = () => {
               className="bg-purple-500 rounded-lg p-1 text-white cursor-pointer"
             />
             <Links />
-            {/* <UserButton /> */}
+            <UserButton />
           </div>
         </div>
       </div>
