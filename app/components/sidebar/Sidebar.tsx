@@ -1,10 +1,17 @@
 "use client";
 import { ActiveLinkProvider } from "../context/ActiveLinkContext";
-import { UserButton } from "@clerk/nextjs";
+import { useAuth, UserButton } from "@clerk/nextjs";
 import { MdQuiz } from "react-icons/md";
 import Links from "./Links";
+import { useEffect, useState } from "react";
 
 const Sidebar = () => {
+  const { userId } = useAuth();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   return (
     <ActiveLinkProvider>
       <div className="dark:bg-slate-800 rounded-lg">
@@ -15,7 +22,7 @@ const Sidebar = () => {
               className="bg-purple-500 rounded-lg p-1 text-white cursor-pointer"
             />
             <Links />
-            <UserButton />
+            {isMounted ? userId ? <UserButton /> : "" : null}
           </div>
         </div>
       </div>

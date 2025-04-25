@@ -68,16 +68,22 @@ function QuizPage() {
 
     setTimeout(() => {
       handleNextQuestion();
-    }, 2000);
+    }, 1000);
   };
 
-  if (loading) return <p>Loading...</p>;
   if (error) return toast.error("Error fetching quiz");
 
   const optionsLabel = ["A", "B", "C", "D"];
 
   return (
     <div>
+      {loading ? (
+        <div className="flex justify-center items-center h-screen font-bold text-2xl">
+          Loading...
+        </div>
+      ) : (
+        ""
+      )}
       <Toaster />
       {quiz && <QuizNavbar quiz={quiz} />}
 

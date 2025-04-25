@@ -3,7 +3,7 @@ import QuizForm from "@/app/components/QuizForm";
 function CreateQuiz() {
   return (
     <div>
-      <QuizForm />
+      <QuizForm isEditing={false} />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 import { BsFillTrashFill } from "react-icons/bs";
 import { MdEdit } from "react-icons/md";
+import { useAuth } from "@clerk/nextjs";
 
 interface QuizCardProps {
   quiz: Quiz;
@@ -16,6 +17,7 @@ interface QuizCardProps {
 }
 
 const QuizCard = ({ quiz, onDelete }: QuizCardProps) => {
+  const user = useAuth();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const toggleMode = () => {
@@ -52,12 +54,16 @@ const QuizCard = ({ quiz, onDelete }: QuizCardProps) => {
         <div>
           <p className="font-bold  text-2xl">{quiz.title}</p>
           <p className="text-gray-500">
-            {quiz.questions.length}
-            {""} questions
+            {quiz.questions.length} {""}
+            {quiz.questions.length <= 1 ? "question" : "questions"}
           </p>
 
-          <div className=" relative flex justify-between items-center">
-            <div className=" cursor-pointer hover:bg-slate-50 hover:text-black  hover:dark:bg-slate-800 hover:dark:text-white rounded-full  h-10 w-10 flex justify-center items-center">
+          <div className=" relative flex justify-between items-center mt-5">
+            <div
+              className={`cursor-pointer hover:bg-slate-50 hover:text-black  hover:dark:bg-slate-800 hover:dark:text-white rounded-full  h-10 w-10 flex justify-center items-center ${
+                quiz.creator === user.userId ? "block" : "hidden"
+              }`}
+            >
               <HiOutlineDotsHorizontal onClick={toggleMode} size={30} />
               {open && (
                 <div

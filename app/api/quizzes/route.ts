@@ -3,6 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongoDB";
 
 interface QuizRequestBody {
+  creator: string;
   title: string;
   icon: string;
   questions: {
@@ -16,14 +17,15 @@ export async function POST(req: NextRequest) {
   await connectDB();
 
   try {
-    const { title, icon, questions }: QuizRequestBody = await req.json();
-    if (!title || !icon || !questions) {
+    const { creator, title, icon, questions }: QuizRequestBody =
+      await req.json();
+    if (!title || !icon || !questions || !creator) {
       return NextResponse.json(
         { message: "Please provide all fields" },
         { status: 400 }
       );
     }
-    await Quiz.create({ title, icon, questions });
+    await Quiz.create({ title, icon, questions, creator });
 
     return NextResponse.json(
       { message: "Quiz created successfully" },

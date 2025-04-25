@@ -11,6 +11,7 @@ const questionSchema = new mongoose.Schema(
 
 const quizSchema = new mongoose.Schema(
   {
+    creator: { type: String, required: true },
     icon: { type: String, required: true },
     title: { type: String, required: true },
     questions: { type: [questionSchema], required: true },

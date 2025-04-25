@@ -38,11 +38,17 @@ function Dashboard() {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
   if (error) return toast.error("Error fetching quizzes");
 
   return (
     <div>
+      {loading ? (
+        <div className="font-bold text-2xl flex justify-center items-center h-screen">
+          Loading...
+        </div>
+      ) : (
+        ""
+      )}
       {quizzes.length === 0 ? (
         <div className="flex flex-col items-center mt-44 gap-3">
           <AiOutlineDropbox size={100} color="purple" />
@@ -57,7 +63,7 @@ function Dashboard() {
         </div>
       ) : (
         <div className="p-10">
-          <p className="text-3xl font-bold ">My quizzes</p>
+          <p className="text-3xl font-bold ">All quizzes</p>
           <div className=" flex gap-10 flex-wrap justify-start items-center mt-16">
             {quizzes.map((quiz) => (
               <QuizCard key={quiz._id} quiz={quiz} onDelete={deleteQuiz} />

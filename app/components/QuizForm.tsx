@@ -10,6 +10,7 @@ import Modal from "./Modal";
 import { QuizIcons } from "@/lib/data";
 import toast, { Toaster } from "react-hot-toast";
 import { RxCrossCircled } from "react-icons/rx";
+import { useAuth } from "@clerk/nextjs";
 
 interface QuizFormProps {
   quiz?: Quiz;
@@ -18,11 +19,13 @@ interface QuizFormProps {
 
 const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
   const router = useRouter();
+  const user = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [icon, setIcon] = useState(initialQuiz?.icon || "");
   const [quiz, setQuiz] = useState<Quiz>(
     initialQuiz || {
       _id: "",
+      creator: user.userId || "",
       title: "",
       icon: "",
       questions: [
@@ -48,10 +51,6 @@ const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
       setIcon(initialQuiz.icon);
     }
   }, [initialQuiz]);
-
-  useEffect(() => {
-    console.log("questions", quiz.questions);
-  }, [quiz.questions]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

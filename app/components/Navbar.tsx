@@ -21,7 +21,7 @@ const Navbar = () => {
       </div>
       <div className="flex gap-5 items-center">
         {userId ? (
-          <UserButton showName />
+          <UserButton />
         ) : (
           <Button width="100px">
             {" "}

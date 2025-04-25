@@ -6,6 +6,7 @@ export interface Question {
 }
 export interface Quiz {
   _id: string;
+  creator: string;
   icon: string;
   title: string;
   questions: Question[];
