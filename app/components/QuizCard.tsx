@@ -89,7 +89,7 @@ const QuizCard = ({ quiz, onDelete }: QuizCardProps) => {
             </div>
 
             <Link
-              href={`/quiz/${quiz._id}`}
+              href={`/playQuiz/${quiz._id}`}
               className=" rounded-full bg-purple-500 text-white p-2 w-10 h-10 flex justify-center items-center"
             >
               <FaPlayCircle size={20} />

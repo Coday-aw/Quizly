@@ -18,7 +18,7 @@ export const useQuizzes = () => {
             },
           }
         );
-        const data = await response.json();
+        const data: Quiz[] = await response.json();
         setQuizzes(data);
         setLoading(false);
         console.log(data);
@@ -50,7 +50,7 @@ export const useQuiz = (id: string) => {
             },
           }
         );
-        const data = await response.json();
+        const data: Quiz = await response.json();
         setQuiz(data);
         setLoading(false);
         console.log(data);

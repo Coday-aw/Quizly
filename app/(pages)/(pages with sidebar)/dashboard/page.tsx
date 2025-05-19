@@ -1,78 +1,17 @@
-"use client";
-import Button from "@/app/components/Button";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { AiOutlineDropbox } from "react-icons/ai";
-import { useQuizzes } from "@/app/hooks/useQuizzes";
-import toast from "react-hot-toast";
-import QuizCard from "@/app/components/QuizCard";
+import SearchBar from "@/app/components/Search";
+import QuizList from "@/app/components/QuizList";
 
-function Dashboard() {
-  const { quizzes: initialQuizzes, loading, error } = useQuizzes();
-  const [quizzes, setQuizzes] = useState(initialQuizzes);
+interface DashboardProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-  useEffect(() => {
-    setQuizzes(initialQuizzes);
-  }, [initialQuizzes]);
-
-  const deleteQuiz = async (id: string) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/quizzes?id=${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await res.json();
-      toast.success("Quiz deleted successfully");
-      setQuizzes((prevQuizzes) =>
-        prevQuizzes.filter((quiz) => quiz._id !== id)
-      );
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-      toast.error("Error deleting");
-    }
-  };
-
-  if (error) return toast.error("Error fetching quizzes");
+export default async function Dashboard({ searchParams }: DashboardProps) {
+  const query = (await searchParams).q as string;
 
   return (
-    <div>
-      {loading ? (
-        <div className="font-bold text-2xl flex justify-center items-center h-screen">
-          Loading...
-        </div>
-      ) : (
-        ""
-      )}
-      {quizzes.length === 0 ? (
-        <div className="flex flex-col items-center mt-44 gap-3">
-          <AiOutlineDropbox size={100} color="purple" />
-          <p className="font-bold text-3xl">
-            Welcome to <span className="text-purple-500">Quizly</span>, Let the
-            fun begin!
-          </p>
-          <p className="text-gray-500">Ready to get started? Click below</p>
-          <Button>
-            <Link href="/create">Create your first Quiz</Link>
-          </Button>
-        </div>
-      ) : (
-        <div className="p-10">
-          <p className="text-3xl font-bold ">All quizzes</p>
-          <div className=" flex gap-10 flex-wrap justify-start items-center mt-16">
-            {quizzes.map((quiz) => (
-              <QuizCard key={quiz._id} quiz={quiz} onDelete={deleteQuiz} />
-            ))}
-          </div>
-        </div>
-      )}
+    <div className="p-10">
+      <SearchBar />
+      <QuizList query={query} />
     </div>
   );
 }
-
-export default Dashboard;

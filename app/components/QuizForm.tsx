@@ -84,15 +84,7 @@ const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!icon) {
-      toast.error("Choose icon for your quiz");
-      return;
-    }
-    if (!quiz) {
-      toast.error("please fill all fields");
-      return;
-    }
+    if (!validateQuiz()) return;
 
     try {
       const url = isEditing
@@ -108,7 +100,7 @@ const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
         body: JSON.stringify(quiz),
       });
 
-      const data = await res.json();
+      const data: { message: string } = await res.json();
       console.log(res, data);
 
       if (res.ok) {
@@ -135,6 +127,35 @@ const QuizForm = ({ quiz: initialQuiz, isEditing }: QuizFormProps) => {
       ...prevQuiz,
       questions: updateFn(prevQuiz.questions),
     }));
+  };
+
+  const validateQuiz = () => {
+    if (!quiz.title.trim()) {
+      toast.error("Quiz title is required");
+      return false;
+    }
+
+    if (!icon) {
+      toast.error("Choose an icon for your quiz");
+      return false;
+    }
+
+    for (const question of quiz.questions) {
+      if (!question.question.trim()) {
+        toast.error("Each question muste have a title");
+        return false;
+      }
+      if (question.options.some((option) => !option.trim())) {
+        toast.error("All options muste be filled");
+        return false;
+      }
+
+      if (!question.correctAnswer.trim()) {
+        toast.error("Each question must have a correct answer");
+        return false;
+      }
+    }
+    return true;
   };
 
   return (
