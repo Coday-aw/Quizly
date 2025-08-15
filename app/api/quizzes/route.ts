@@ -45,17 +45,10 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-<<<<<<< HEAD
     const userId = searchParams.get("userId");
 
     if (id) {
       const quiz = await Quiz.findById(id);
-=======
-
-    if (id) {
-      const quiz = await Quiz.findById(id);
-
->>>>>>> 24648072ef600ff4a9b733abb77ba335ed3c5e0f
       if (!quiz) {
         return NextResponse.json(
           { message: "Quiz not found" },
@@ -64,13 +57,8 @@ export async function GET(req: NextRequest) {
       }
 
       return NextResponse.json(quiz, { status: 200 });
-<<<<<<< HEAD
     } else if (userId) {
       const quizzes = await Quiz.find({ creator: userId });
-=======
-    } else {
-      const quizzes = await Quiz.find();
->>>>>>> 24648072ef600ff4a9b733abb77ba335ed3c5e0f
       return NextResponse.json(quizzes, { status: 200 });
     }
   } catch (error) {

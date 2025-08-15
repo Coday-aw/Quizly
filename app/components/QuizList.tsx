@@ -6,7 +6,6 @@ import QuizCard from "./QuizCard";
 import Button from "./Button";
 import Link from "next/link";
 import { AiOutlineDropbox } from "react-icons/ai";
-<<<<<<< HEAD
 import { useAuth } from "@clerk/nextjs";
 
 const QuizList = () => {
@@ -14,19 +13,6 @@ const QuizList = () => {
   const { quizzes: initialQuizzes, loading, error } = useQuizzes(userId || "");
   const [quizzes, setQuizzes] = useState(initialQuizzes);
 
-=======
-
-const QuizList = ({ query }: { query: string }) => {
-  const { quizzes: initialQuizzes, loading, error } = useQuizzes();
-  const [quizzes, setQuizzes] = useState(initialQuizzes);
-
-  const filtedQuizzes = query
-    ? quizzes.filter((quiz) =>
-        quiz.title.toLowerCase().includes(query.toLowerCase())
-      )
-    : quizzes;
-
->>>>>>> 24648072ef600ff4a9b733abb77ba335ed3c5e0f
   useEffect(() => {
     setQuizzes(initialQuizzes);
   }, [initialQuizzes]);
@@ -72,11 +58,7 @@ const QuizList = ({ query }: { query: string }) => {
 
   return (
     <div>
-<<<<<<< HEAD
       {quizzes.length === 0 ? (
-=======
-      {filtedQuizzes.length === 0 ? (
->>>>>>> 24648072ef600ff4a9b733abb77ba335ed3c5e0f
         <div className="flex flex-col items-center mt-44 gap-3">
           <AiOutlineDropbox size={100} color="purple" />
           <p className="font-bold text-3xl">
@@ -89,13 +71,8 @@ const QuizList = ({ query }: { query: string }) => {
           </Button>
         </div>
       ) : (
-<<<<<<< HEAD
         <div className=" flex gap-10 flex-wrap justify-start items-center mt-7 ">
           {quizzes.map((quiz) => (
-=======
-        <div className=" flex gap-10 flex-wrap justify-start items-center mt-16">
-          {filtedQuizzes.map((quiz) => (
->>>>>>> 24648072ef600ff4a9b733abb77ba335ed3c5e0f
             <QuizCard key={quiz._id} quiz={quiz} onDelete={deleteQuiz} />
           ))}
         </div>

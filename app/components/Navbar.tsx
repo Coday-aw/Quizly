@@ -8,11 +8,7 @@ import ModeToggle from "./ModeToggle";
 const Navbar = () => {
   const { userId } = useAuth();
   return (
-<<<<<<< HEAD
     <nav className="flex justify-between p-10 ">
-=======
-    <nav className="flex justify-between p-10">
->>>>>>> 24648072ef600ff4a9b733abb77ba335ed3c5e0f
       <div className="flex gap-2 justify-center items-center">
         <Link href="/dashboard">
           <MdQuiz
